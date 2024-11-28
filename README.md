@@ -12,7 +12,7 @@ Resolución de problema [Cd and pwd commands](https://codeforces.com/contest/158
 
 Video en [YouTube](https://youtu.be/j5oZu-PvWoA?feature=shared) con duración de 5:53 mins.
 
-Se usó un deque. La resolución del problema se encuentra en `problema2.cpp`.
+Se usó un Deque. La resolución del problema se encuentra en `problema2.cpp`.
 
 ## Problema 3 - Estructura de datos no lineal
 
@@ -20,4 +20,4 @@ Resolución de problema [Reposts](https://codeforces.com/contest/522/problem/A) 
 
 Video en [YouTube](https://youtu.be/F8ODfuATnRI?feature=shared) con duración de 4:51 mins.
 
-Se usó un ShellSort. La resolución del problema se encuentra en `problema3.cpp`.
+Se usó un Hashmap. La resolución del problema se encuentra en `problema3.cpp`.
