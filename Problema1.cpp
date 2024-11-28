@@ -2,8 +2,6 @@
 #include <bits/stdc++.h>
 #define fore(i, l, r) for (long long i = (l); i < (r); i++)
 #define forex(i, l, r) for (long long i = (l); i >= (r); i--)
-#define ll long long
-#define ull unsigned long long
 #define nl cout<<"\n"
 #define cnl "\n"
 #define rfc "\033[31;1m"
@@ -16,90 +14,102 @@
 #define pb push_back
 using namespace std;
 
+/**
+ * @class RAM
+ * 
+ * Declaración de la clase RAM, la cuál
+ * contiene los datos del programa que da
+ * más ram.
+ */
 class Ram{
     private:
-        ll run;
-        ll given;
+        int run;
+        int given;
 
     public:
-        Ram(ll, ll);
-        ll getRun();
-        ll getGiven();
+        Ram(int, int);
+        int getRun();
+        int getGiven();
 };
 
-Ram::Ram(ll Run, ll Given){
+/**
+ * @brief Constructor del RAM.
+ * 
+ * @param Run La cantidad de RAM necesaria 
+ * para ejecutar el programa.
+ * @param Given La cantidad de RAM que regresa
+ * el programa después de su ejecución.
+ */
+Ram::Ram(int Run, int Given){
     run=Run;
     given=Given;
 }
 
-ll Ram::getRun(){
+/**
+ * @brief Regresa la cantidad de RAM
+ * necesaria para ejecutar el programa.
+ * 
+ * @return int - El valor del RAM.
+ */
+int Ram::getRun(){
     return run;
 }
 
-ll Ram::getGiven(){
+/**
+ * @brief Regresa la cantidad de RAM
+ * regresada al terminar la ejecución del
+ * programa.
+ * 
+ * @return int - El valor del RAM.
+ */
+int Ram::getGiven(){
     return given;
 }
 
+/**
+ * @brief Clase que contiene el método
+ * para el ordenamiento de los programas.
+ */
 class Sorts{
     public:
-        void mergeArray(vector<Ram*>&, vector<Ram*>&, ll, ll, ll);
-        void mergeSplit(vector<Ram*>&, vector<Ram*>&, ll, ll);
-        void mergeCopy(vector<Ram*>&, vector<Ram*>&, ll, ll);
-        void mergeSort(vector<Ram*>&);
+        void shellSort(vector<Ram*>&);
 };
 
-void Sorts::mergeArray(vector<Ram*>& A, vector<Ram*>& B, ll low, ll mid, ll high){
-    ll fp=low, sp=mid+1;
-    for(ll i=low; i<=high; i++){
-        if(fp==mid+1){
-            B[i]=A[sp];
-            sp++;
-        }else if(sp==high+1){
-            B[i]=A[fp];
-            fp++;
-        }else{
-            if(A[fp]->getRun()<A[sp]->getRun()){
-                B[i]=A[fp];
-                fp++;
-            }else{
-                B[i]=A[sp];
-                sp++;
+/**
+ * @brief Ordena los programas dependiendo del RAM
+ * que ocupan para su ejecución. Tiene una complejidad
+ * temporal de O(n(log(n))^2), lo que lo hace más rápido
+ * que los que tienen O(n^2).
+ * 
+ * @param v El vector a ordenar.
+ */
+void Sorts::shellSort(vector<Ram*> &v){
+    int gap = v.size() / 2;
+
+    while(gap>0){
+        for(int i=gap; i<v.size(); i++){
+            for(int j=i; j>=gap && v[j]->getRun()<v[j-gap]->getRun(); j-=gap){
+                swap(v[j], v[j-gap]);
             }
         }
+        gap/=2;
     }
-}
-
-void Sorts::mergeSplit(vector<Ram*>& A, vector<Ram*>& B, ll low, ll high){ 
-    if(high-low<1){
-        return;
-    }
-    ll mid=(low+high)/2;
-    mergeSplit(A, B, low, mid);
-    mergeSplit(A, B, mid+1, high);
-    mergeArray(A, B, low, mid, high);
-    mergeCopy(A,B, low, high);
-}
-
-void Sorts::mergeCopy(vector<Ram*>& A, vector<Ram*>& B, ll low, ll high){
-    for(ll i=low; i<=high; i++){
-        A[i]=B[i];
-    }
-}
-
-void Sorts::mergeSort(vector<Ram*>& v1){
-    vector<Ram*> v2(v1.size());
-    mergeSplit(v1, v2, 0, v1.size()-1);
 }
 
 int main(){
 
-    int q;
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+
+    int q; //Número de casos
     cin>>q;
+
     for(int i=0; i<q; i++){
         int n, ram;
         cin>>n>>ram;
-        vector<int> v;
+        vector<int> v; //Solo guarda los datos para meterlos posteriormente en el de RAM
         vector<Ram*> rams;
+
         for(int j=0; j<n; j++){
             int aux;
             cin>>aux; v.push_back(aux);
@@ -107,14 +117,14 @@ int main(){
         for(int j=0; j<n; j++){
             int aux;
             cin>>aux;
-            rams.push_back(new Ram(v[j], aux));
+            rams.push_back(new Ram(v[j], aux)); //Incluyo el valor de ejecución (vector pasado) y el que regresa al final (valor leído)
         }
         Sorts sort;
-        sort.mergeSort(rams);
+        sort.shellSort(rams); //Se ordena dependiendo del valor de ejecución
 
         int j=0;
-        while(j<n && rams[j]->getRun()<=ram){
-            ram+=rams[j]->getGiven();
+        while(j<n && rams[j]->getRun()<=ram){ //Mientras el RAM actual me permita ejecutar el siguiente programa
+            ram+=rams[j]->getGiven(); //Le añado el RAM que regresa el programa
             j++;
         }
 
@@ -122,4 +132,6 @@ int main(){
     }
 
     cout<<"\n";
+
+    return 0;
 }
